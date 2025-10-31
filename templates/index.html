@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>🍽️ Food Classifier & Nutrition Advisor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      :root {
+        --bg: #f5f5f5;
+        --text: #333;
+        --card: #fff;
+        --primary: #4caf50;
+        --warning: #f44336;
+      }
+
+      body.dark {
+        --bg: #121212;
+        --text: #e0e0e0;
+        --card: #1f1f1f;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: auto;
+        padding: 30px;
+      }
+
+      .card {
+        background: var(--card);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        color: var(--primary);
+      }
+
+      label {
+        font-weight: bold;
+      }
+
+      input[type="file"],
+      input[type="number"],
+      input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0 20px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+      }
+
+      input[type="submit"] {
+        background-color: var(--primary);
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      .result {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 15px;
+        background-color: #e0ffe0;
+      }
+
+      .result img {
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 15px;
+      }
+
+      .prediction {
+        margin-top: 10px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 0.9em;
+        color: gray;
+      }
+
+      .toggle-btn {
+        float: right;
+        margin-top: -25px;
+        background: none;
+        border: none;
+        font-size: 1em;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <button class="toggle-btn" onclick="toggleDarkMode()">
+          🌓 Toggle Theme
+        </button>
+        <h2>🍽️ Food Classifier & Nutrition Advisor</h2>
+        <form method="POST" enctype="multipart/form-data">
+          <label>📷 Upload Food Image</label>
+          <input type="file" name="image" required />
+
+          <label>⚖️ Your Weight (kg)</label>
+          <input type="number" name="weight" required />
+
+          <label>🩺 Are you Diabetic?</label>
+          <input type="checkbox" name="diabetic" /> Yes
+
+          <input type="submit" value="🔍 Predict Food & Nutrition" />
+        </form>
+
+        {% if prediction %}
+        <div class="result">
+          <h3>🥗 Top Predictions:</h3>
+          <div class="prediction">1️⃣ <b>{{ prediction }}</b></div>
+          {% if top_predictions %} {% for pred in top_predictions %}
+          <div class="prediction">
+            {{ loop.index }}. {{ pred[0] }} - {{ (pred[1]*100)|round(2) }}%
+          </div>
+          {% endfor %} {% endif %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + image) }}"
+            alt="Food Image"
+          />
+          <h4>{{ recommendation }}</h4>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Food Classifier | Built with Flask & ❤️</div>
+
+    <script>
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark");
+      }
+    </script>
+  </body>
+</html>
